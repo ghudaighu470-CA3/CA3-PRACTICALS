@@ -1,0 +1,34 @@
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        ListNode dummy(0, head);
+        ListNode* groupPrev = &dummy;
+
+        while (true) {
+            // Find the kth node; stop if the remaining group is incomplete.
+            ListNode* kth = groupPrev;
+            for (int i = 0; i < k && kth != nullptr; ++i) {
+                kth = kth->next;
+            }
+            if (kth == nullptr) break;
+
+            ListNode* groupNext = kth->next;
+
+            // Reverse this group, stopping at groupNext.
+            ListNode* prev = groupNext;
+            ListNode* curr = groupPrev->next;
+            while (curr != groupNext) {
+                ListNode* next = curr->next;
+                curr->next = prev;
+                prev = curr;
+                curr = next;
+            }
+
+            ListNode* oldGroupHead = groupPrev->next;
+            groupPrev->next = kth;
+            groupPrev = oldGroupHead;
+        }
+
+        return dummy.next;
+    }
+};
